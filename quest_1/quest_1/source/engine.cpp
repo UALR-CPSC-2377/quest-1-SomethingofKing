@@ -19,6 +19,7 @@ loadBlockData(
 	inFS.open(p_gameFile);
 	int count = 1;
 	int num = 0;
+	int topArray[21];
 	for (int y = 0; y < 14; y++) {
 		for (int x = 0; x < 21; x++) {
 
@@ -32,7 +33,15 @@ loadBlockData(
 				x * p_objects[count].dimensions.width,
 				y * p_objects[count].dimensions.height
 				};
+
 			
+				if (topArray[x] != 0) {
+					p_objects[count].top = true;
+					topArray[x] = 0;
+				}
+
+				
+
 			count++;
 
 			}
@@ -73,10 +82,17 @@ randomPlayerData (
 	static std::uniform_int_distribution<std::mt19937::result_type> uniform1(0, 13);
 	p_objects->spriteID = uniform1(rng);
 
-	static std::uniform_int_distribution<std::mt19937::result_type> uniform2(0, 320);
-	p_objects->position.x = uniform2(rng);
+	int maxWidth = p_objects[1].dimensions.width*20;
 
-	p_objects->position.y = p_objects->top;
+	static std::uniform_int_distribution<std::mt19937::result_type> uniform2(0, maxWidth);
+	p_objects->position.x = uniform2(rng);
+	
+	
+	int temp;
+	temp = getMaxYOfBlock(*p_objects, p_objects, p_numObjects);
+	p_objects->position.y = temp;
+	
+
     /*
         -- randomPlayerData   --
         Parameters:
@@ -100,6 +116,18 @@ getMaxYOfBlock (
     const Object objects[],
     int numObjects
 ) {
+	int location = 0;
+	for (int i = 0; i < numObjects; i++) {
+		if (player.position.x >= objects[i].position.x && player.position.x <= objects[i].position.x + objects[i].dimensions.width){
+			if (objects[i].top == true) {
+				location = objects[i].position.y - objects[i].dimensions.height*2;
+				break;
+			}
+		}
+		
+	}
+
+
     /*
         -- getMaxYOfBlock --
         Parameters
@@ -110,5 +138,5 @@ getMaxYOfBlock (
         Return: The height that the player needs to be at to be physically accurate
     */
 
-    return 0; // placeholder
+    return location; // placeholder
 }
