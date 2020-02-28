@@ -10,16 +10,46 @@
 #include "GUI.h"
 
 int
-loadBlockData (
-    const std::string& p_gameFile,
-    Object p_objects[],
-    const GUI& p_gui
+loadBlockData(
+	const std::string& p_gameFile,
+	Object p_objects[],
+	const GUI& p_gui
 ) {
+	std::ifstream inFS;
+	inFS.open(p_gameFile);
+	int count = 1;
+	int num = 0;
+	for (int y = 0; y < 14; y++) {
+		for (int x = 0; x < 21; x++) {
+
+			inFS >> num;
+			if (num != 0) {
+				p_objects[count].type = (Type)num;
+				p_objects[count].dimensions = p_gui.getObjectDimensions(p_objects[count]);
+			
+				p_objects[count].position =
+				{
+				x * p_objects[count].dimensions.width,
+				y * p_objects[count].dimensions.height
+				};
+			
+			count++;
+
+			}
+		}
+	}
+	
+	return count-1;
+
+}
+
+
+
     /*
         -- loadBlockData   --
         Parameters:
             p_gameFile : A string representing the location of the game data file
-            p_objects  : An array of default-constructed objects, each element
+            p_objects  : An array of default-constructed, each element
                          needs to be updated to with the correct information from
                          the data file
             p_gui      : A reference to the GUI Object if you need it
@@ -30,8 +60,7 @@ loadBlockData (
         p_objects with the appropriate data.
     */
 
-    return 0; // placeholder
-}
+
 
 void
 randomPlayerData (
