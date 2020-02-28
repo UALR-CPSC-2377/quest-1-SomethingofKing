@@ -68,6 +68,15 @@ randomPlayerData (
     Object p_objects[],
     const GUI & p_gui
 ) {
+	std::random_device device;
+	std::mt19937 rng(device());
+	static std::uniform_int_distribution<std::mt19937::result_type> uniform1(0, 13);
+	p_objects->spriteID = uniform1(rng);
+
+	static std::uniform_int_distribution<std::mt19937::result_type> uniform2(0, 320);
+	p_objects->position.x = uniform2(rng);
+
+	p_objects->position.y = p_objects->top;
     /*
         -- randomPlayerData   --
         Parameters:
